@@ -1,0 +1,37 @@
+
+@import "tailwindcss";
+
+:root {
+  --azul-noche: #111827;
+  --azul-electrico: #2563EB;
+  --turquesa: #14B8A6;
+  --dorado: #F5B942;
+  --fondo: #0B1120;
+  --tarjeta: #1F2937;
+  --texto: #F9FAFB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--azul-noche);
+  color: var(--texto);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--turquesa);
+  color: var(--azul-noche);
+}
