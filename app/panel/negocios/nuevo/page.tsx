@@ -141,7 +141,7 @@ async function cargarCategorias() {
 
           <button
             type="submit"
-            disabled={guardando}
+            disabled={true}
             style={{
               width: "100%",
               padding: "14px",
