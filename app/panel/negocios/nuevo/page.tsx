@@ -15,9 +15,18 @@ export default function NuevoNegocioPage() {
   const [mensaje, setMensaje] = useState("");
   const [guardando, setGuardando] = useState(false);
 
-  const supabase = createClient();
+  
+const supabase = createClient();
 
-  async function cargarCategorias() {
+async function cargarCategorias() {
+  const { data: { user }, error: authError } =
+    await supabase.auth.getUser();
+
+  if (authError || !user) {
+    router.replace("/login");
+    return;
+  }
+
     const { data, error } = await supabase
       .from("business_categories") 
 .select("id, name")
