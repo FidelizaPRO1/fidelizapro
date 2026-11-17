@@ -1,7 +1,17 @@
-
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+export default async function PanelPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-export default function PanelPage() {
+  if (error || !user) {
+    redirect("/login");
+  }
+
   const herramientas = [
     {
       titulo: "Clientes",
