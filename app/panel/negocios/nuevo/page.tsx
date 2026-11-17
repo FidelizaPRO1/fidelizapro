@@ -10,7 +10,7 @@ export default function NuevoNegocioPage() {
   const [nombre, setNombre] = useState("");
   const [categoria, setCategoria] = useState("");
   const [categorias, setCategorias] = useState<
-    { id: string; nombre: string }[]
+    { id: string; name: string }[]
   >([]);
   const [mensaje, setMensaje] = useState("");
   const [guardando, setGuardando] = useState(false);
@@ -19,11 +19,10 @@ export default function NuevoNegocioPage() {
 
   async function cargarCategorias() {
     const { data, error } = await supabase
-      .from("business_categories")
-      .select("id, nombre")
-      .eq("activo", true)
-      .order("nombre");
-
+      .from("business_categories") 
+.select("id, name")
+.eq("active", true)
+.order("name");
     if (error) {
       setMensaje("No se pudieron cargar las categorías.");
       return;
@@ -126,7 +125,7 @@ export default function NuevoNegocioPage() {
             <option value="">Selecciona una categoría</option>
             {categorias.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.nombre}
+                {item.name}
               </option>
             ))}
           </select>
