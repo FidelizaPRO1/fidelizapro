@@ -1,36 +1,71 @@
 
 export default function ClientesPage() {
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
-      <div className="mx-auto max-w-5xl">
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#111827",
+        color: "#F9FAFB",
+        padding: "40px 20px",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <a
           href="/"
-          className="text-sm text-teal-400 hover:underline"
+          style={{ color: "#14B8A6", textDecoration: "none" }}
         >
           ← Volver al inicio
         </a>
 
-        <h1 className="mt-8 text-3xl font-bold">
-          Clientes
-        </h1>
+        <div style={{ marginTop: 45, marginBottom: 35 }}>
+          <p style={{ color: "#14B8A6", fontWeight: "bold" }}>
+            FIDELIZAPRO | PANEL DE GESTIÓN
+          </p>
 
-        <p className="mt-3 text-slate-300">
-          Administra los clientes de tu negocio
-          desde FidelizaPRO.
-        </p>
+          <h1 style={{ fontSize: 36, marginBottom: 12 }}>
+            Gestión de Clientes
+          </h1>
 
-        <section className="mt-8 rounded-2xl border border-slate-700 bg-slate-900 p-6">
-          <h2 className="text-xl font-semibold">
-            Gestión de clientes
+          <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+            Administra los clientes de tu negocio,
+            consulta sus puntos y fortalece su fidelidad.
+          </p>
+        </div>
+
+        <section
+          style={{
+            background: "#1F2937",
+            padding: 30,
+            borderRadius: 16,
+            border: "1px solid #374151",
+          }}
+        >
+          <h2 style={{ fontSize: 24, marginTop: 0 }}>
+            Mis clientes
           </h2>
 
-          <p className="mt-3 text-slate-400">
-            Próximamente podrás registrar clientes,
-            consultar sus puntos y administrar
-            su historial de fidelización.
+          <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+            Aquí podrás registrar nuevos clientes,
+            consultar su información y administrar
+            sus puntos de fidelización.
           </p>
+
+          <div
+            style={{
+              marginTop: 25,
+              padding: 20,
+              background: "#111827",
+              borderRadius: 12,
+              textAlign: "center",
+              color: "#14B8A6",
+            }}
+          >
+            Próximamente: Registro y administración de clientes
+          </div>
         </section>
       </div>
     </main>
   );
 }
+
