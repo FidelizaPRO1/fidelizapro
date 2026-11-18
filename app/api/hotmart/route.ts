@@ -26,8 +26,31 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: "JSON inválido" },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof payload !== "object" ||
+    payload === null ||
+    Array.isArray(payload)
+  ) {
+    return NextResponse.json(
+      { error: "Formato de notificación inválido" },
+      { status: 400 }
+    );
+  }
+
   return NextResponse.json({
     received: true,
-    message: "Notificación recibida. Procesamiento pendiente."
+    message: "Notificación recibida. Registro pendiente de validación."
   });
 }
