@@ -18,15 +18,12 @@ export async function POST(request: NextRequest) {
   }
 
   const receivedHottok = request.headers.get("x-hotmart-hottok");
-
   if (!receivedHottok || receivedHottok !== expectedHottok) {
-    return NextResponse.json(
-      { error: "Notificación no autorizada" },
-      { status: 401 }
-    );
-  }
-
-  
+  return NextResponse.json(
+    { error: "Notificación no autorizada" },
+    { status: 401 }
+  );
+}
   let payload: unknown;
 
   try {
@@ -49,8 +46,61 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  
+  const notification = payload as Record<string, unknown>;
+
+  
+  const eventId =
+    typeof notification.id === "string"
+      ? notification.id
+      : "";
+
+  const eventName =
+    typeof notification.event === "string"
+      ? notification.event
+      : "";
+
+
+  if (
+    typeof eventId !== "string" ||
+    !eventId.trim() ||
+    typeof eventName !== "string" ||
+    !eventName.trim()
+  ) {
+    return NextResponse.json(
+      { error: "Identificador o evento no válido" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabaseAdmin
+    .from("payment_events")
+    .insert({
+      provider: "hotmart",
+      event_id: eventId,
+      event: eventName,
+      payload: notification
+    });
+
+
+  if (error) { 
+    if (error.code === "23505") {
+      return NextResponse.json({
+        received: true,
+        message: "Notificación duplicada. Ya estaba registrada."
+      });
+    }
+
+    console.error("Error al registrar notificación:", error.message);
+
+    return NextResponse.json(
+      { error: "No se pudo registrar la notificación" },
+      { status: 500 }
+    );
+  }
+
   return NextResponse.json({
     received: true,
-    message: "Notificación recibida. Registro pendiente de validación."
+    message: "Notificación registrada. Procesamiento pendiente."
   });
 }
