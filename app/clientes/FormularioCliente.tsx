@@ -120,8 +120,8 @@ setCorreo("");
           background: "#14B8A6",
           color: "#111827",
           fontWeight: "bold",
-          opacity: 0.6,
-          cursor: "not-allowed",
+          opacity: guardando ? 0.6 : 1,
+          cursor: "pointer",
         }}
       >
         {guardando ? "Guardando cliente..." : "Guardar cliente"}
