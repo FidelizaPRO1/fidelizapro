@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
+import FormularioPuntos from "./FormularioPuntos";
 export default async function PuntosPage({
   params,
 }: {
