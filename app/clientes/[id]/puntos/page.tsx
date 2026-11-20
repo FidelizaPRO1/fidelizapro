@@ -73,6 +73,7 @@ if (errorMembresia || !membresia || membresia.length === 0) {
 <p style={{ color: "#9CA3AF" }}>
   Aquí podrás sumar puntos por compras o visitas.
 </p>
+<FormularioPuntos clienteId={cliente.id} />
       </div>
     </main>
   );
