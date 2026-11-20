@@ -21,6 +21,13 @@ const { data: negocios, error: errorNegocios } = await supabase
 if (errorNegocios || !negocios || negocios.length === 0) {
   redirect("/panel");
 }
+const businessId = negocios[0].business_id;
+
+const { data: clientes, error: errorClientes } = await supabase
+  .from("customers")
+  .select("id, full_name, phone, email, points_balance")
+  .eq("business_id", businessId)
+  .order("created_at", { ascending: false });
   return (
 
     <main
@@ -84,6 +91,38 @@ if (errorNegocios || !negocios || negocios.length === 0) {
             }}
           >
             <FormularioCliente />
+            <div style={{ marginTop: 30, textAlign: "left" }}>
+  <h3 style={{ color: "#14B8A6" }}>
+    Clientes registrados
+  </h3>
+
+  {errorClientes ? (
+    <p>No fue posible cargar los clientes.</p>
+  ) : clientes && clientes.length > 0 ? (
+    <div style={{ display: "grid", gap: 12 }}>
+      {clientes.map((cliente) => (
+        <div
+          key={cliente.id}
+          style={{
+            background: "#1F2937",
+            padding: 16,
+            borderRadius: 10,
+            border: "1px solid #374151",
+          }}
+        >
+          <p><strong>Nombre:</strong> {cliente.full_name}</p>
+          <p><strong>Teléfono:</strong> {cliente.phone || "No registrado"}</p>
+          <p><strong>Correo:</strong> {cliente.email || "No registrado"}</p>
+          <p>
+            <strong>Puntos:</strong> {cliente.points_balance ?? 0}
+          </p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p>Todavía no hay clientes registrados.</p>
+  )}
+</div>
           </div>
         </section>
       </div>
