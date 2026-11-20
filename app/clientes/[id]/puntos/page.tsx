@@ -36,15 +36,30 @@ const { data: membresia, error: errorMembresia } = await supabase
 if (errorMembresia || !membresia || membresia.length === 0) {
   redirect("/clientes");
 }
-  return (
+    return (
     <main
       style={{
         minHeight: "100vh",
         background: "#111827",
         color: "#F9FAFB",
-        padding: 30,
+        padding: "50px 20px",
+        fontFamily: "Arial, sans-serif",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
       }}
     >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 750,
+          background: "#1F2937",
+          padding: "35px 25px",
+          borderRadius: 16,
+          border: "1px solid #374151",
+          boxSizing: "border-box",
+        }}
+      >
       <h1>Gestión de puntos</h1>
 
 <h2 style={{ color: "#14B8A6", marginTop: 30 }}>
@@ -58,6 +73,7 @@ if (errorMembresia || !membresia || membresia.length === 0) {
 <p style={{ color: "#9CA3AF" }}>
   Aquí podrás sumar puntos por compras o visitas.
 </p>
+      </div>
     </main>
   );
 }
