@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
+import FormularioCliente from "./FormularioCliente";
 export default async function ClientesPage() {
   const supabase = await createClient();
 
@@ -83,7 +83,7 @@ if (errorNegocios || !negocios || negocios.length === 0) {
               color: "#14B8A6",
             }}
           >
-            Próximamente: Registro y administración de clientes
+            <FormularioCliente />
           </div>
         </section>
       </div>
