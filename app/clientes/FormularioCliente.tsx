@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 export default function FormularioCliente() {
 const supabase = createClient();
+const router = useRouter();
 const [nombre, setNombre] = useState("");
 const [telefono, setTelefono] = useState("");
 const [correo, setCorreo] = useState("");
@@ -54,6 +56,7 @@ if (errorRegistro) {
 }
 
 setMensaje("Cliente registrado correctamente.");
+router.refresh();
 setNombre("");
 setTelefono("");
 setCorreo("");
