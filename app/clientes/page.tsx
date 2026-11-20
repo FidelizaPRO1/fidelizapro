@@ -12,7 +12,15 @@ export default async function ClientesPage() {
   if (error || !user) {
     redirect("/login");
   }
+const { data: negocios, error: errorNegocios } = await supabase
+  .from("business_members")
+  .select("business_id")
+  .eq("user_id", user.id)
+  .limit(1);
 
+if (errorNegocios || !negocios || negocios.length === 0) {
+  redirect("/panel");
+}
   return (
 
     <main
