@@ -1,6 +1,20 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
-export default function ClientesPage() {
+export default async function ClientesPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/login");
+  }
+
   return (
+
     <main
       style={{
         minHeight: "100vh",
