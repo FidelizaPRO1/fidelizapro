@@ -1,17 +1,74 @@
 "use client";
 
 import { useState } from "react";
-
+import { createClient } from "@/lib/supabase/client";
 export default function FormularioCliente() {
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [correo, setCorreo] = useState("");
+const supabase = createClient();
+const [nombre, setNombre] = useState("");
+const [telefono, setTelefono] = useState("");
+const [correo, setCorreo] = useState("");
+const [mensaje, setMensaje] = useState("");
+const [guardando, setGuardando] = useState(false);
+async function registrarCliente() {
+  setGuardando(true);
+  setMensaje("");
 
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      setMensaje("Debes iniciar sesión.");
+      return;
+    }
+
+const { data: negocios, error: errorNegocios } = await supabase
+  .from("business_members")
+  .select("business_id")
+  .eq("user_id", user.id)
+  .limit(1);
+
+if (errorNegocios || !negocios || negocios.length === 0) {
+  setMensaje("No tienes un negocio autorizado.");
+  return;
+}
+
+const businessId = negocios[0].business_id;
+
+const datosCliente = {
+  business_id: businessId,
+  full_name: nombre.trim(),
+  phone: telefono.trim() || null,
+  email: correo.trim() || null,
+};
+
+const { error: errorRegistro } = await supabase
+  .from("customers")
+  .insert(datosCliente);
+
+if (errorRegistro) {
+  setMensaje("Error al registrar el cliente: " + errorRegistro.message);
+  return;
+}
+
+setMensaje("Cliente registrado correctamente.");
+setNombre("");
+setTelefono("");
+setCorreo("");
+  } catch {
+    setMensaje("No fue posible verificar la sesión.");
+  } finally {
+    setGuardando(false);
+  }
+}  
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();
-      }}
+  e.preventDefault();
+  void registrarCliente();
+}}
       style={{
         display: "grid",
         gap: 16,
@@ -55,7 +112,7 @@ export default function FormularioCliente() {
 
       <button
         type="submit"
-        disabled
+        disabled={guardando}
         style={{
           padding: 14,
           borderRadius: 10,
@@ -67,9 +124,22 @@ export default function FormularioCliente() {
           cursor: "not-allowed",
         }}
       >
-        Guardar cliente (próximamente)
+        {guardando ? "Guardando cliente..." : "Guardar cliente"}
       </button>
-    </form>
+    
+    {mensaje && (
+    <p
+    role="status"
+    style={{
+      color: "#14B8A6",
+      fontWeight: "bold",
+      marginTop: 10,
+    }}
+  >
+    {mensaje}
+  </p>
+)}
+   </form>
   );
 }
 
