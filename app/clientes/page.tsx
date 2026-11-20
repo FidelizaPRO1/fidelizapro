@@ -116,6 +116,7 @@ const { data: clientes, error: errorClientes } = await supabase
           <p>
             <strong>Puntos:</strong> {cliente.points_balance ?? 0}
           </p>
+          <a href={`/clientes/${cliente.id}/puntos`} style={{ display: "inline-block", marginTop: 12, padding: "10px 16px", background: "#14B8A6", color: "#111827", borderRadius: 8, fontWeight: "bold", textDecoration: "none" }}>Sumar puntos</a>
         </div>
       ))}
     </div>
