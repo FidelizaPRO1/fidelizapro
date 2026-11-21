@@ -65,7 +65,7 @@ if (errorHistorial) {
       <div className={styles.panel}>
     <h1 className={styles.titulo}>Gestión de puntos</h1>
 
-<h2 style={{ color: "#14B8A6", marginTop: 30 }}>
+  <h2 className={styles.cliente}>
   {cliente.full_name}
 </h2>
 
