@@ -79,16 +79,7 @@ export default function FormularioCanje({
   }
 
   return (
-    <section
-      style={{
-        marginTop: 30,
-        paddingTop: 24,
-        borderTop: "1px solid #374151",
-      }}
-    >
-      <h2 style={{ color: "#F9FAFB", fontSize: 22 }}>
-        Canjear recompensa
-      </h2>
+  <section>
 
       <p style={{ color: "#9CA3AF" }}>
         Selecciona una recompensa disponible para este cliente.
