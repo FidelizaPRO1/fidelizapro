@@ -110,20 +110,10 @@ if (errorHistorial) {
   ) : (
     <div style={{ display: "grid", gap: 12 }}>
       {historial.map((movimiento) => (
-        <div
-          key={movimiento.id}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 12,
-            padding: 16,
-            background: "#111827",
-            border: "1px solid #374151",
-            borderRadius: 10,
-          }}
-        >
+    <div
+  key={movimiento.id}
+  className={styles.movimiento}
+>
           <div>
             <p style={{ margin: "0 0 8px", fontWeight: 600 }}>
               {movimiento.reason}
