@@ -69,9 +69,14 @@ if (errorHistorial) {
   {cliente.full_name}
 </h2>
 
-<p style={{ fontSize: 22 }}>
-  Puntos disponibles: <strong>{cliente.points_balance ?? 0}</strong>
-</p>
+<div className={styles.saldo}>
+  <strong className={styles.saldoNumero}>
+    {cliente.points_balance ?? 0}
+  </strong>
+  <span className={styles.saldoTexto}>
+    Puntos disponibles
+  </span>
+</div>
 
 <p style={{ color: "#9CA3AF" }}>
   Aquí podrás sumar puntos por compras o visitas.
