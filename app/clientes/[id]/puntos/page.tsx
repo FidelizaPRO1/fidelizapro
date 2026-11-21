@@ -78,15 +78,22 @@ if (errorHistorial) {
   </span>
 </div>
 
-<p style={{ color: "#9CA3AF" }}>
-  Aquí podrás sumar puntos por compras o visitas.
-</p>
-<FormularioPuntos clienteId={cliente.id} />
-<FormularioCanje
-  clienteId={cliente.id}
-  puntosDisponibles={cliente.points_balance ?? 0}
-  recompensas={recompensas ?? []}
-/>
+<div className={styles.acciones}>
+  <section className={styles.seccion}>
+    <h2 className={styles.seccionTitulo}>Sumar puntos</h2>
+    <FormularioPuntos clienteId={cliente.id} />
+  </section>
+
+  <section className={styles.seccion}>
+    <h2 className={styles.seccionTitulo}>Canjear recompensa</h2>
+    <FormularioCanje
+      clienteId={cliente.id}
+      puntosDisponibles={cliente.points_balance ?? 0}
+      recompensas={recompensas ?? []}
+    />
+  </section>
+</div>
+        
 <section
   style={{
     marginTop: 32,
