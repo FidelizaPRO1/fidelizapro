@@ -37,6 +37,16 @@ const { data: membresia, error: errorMembresia } = await supabase
 if (errorMembresia || !membresia || membresia.length === 0) {
   redirect("/clientes");
 }
+  const { data: recompensas, error: errorRecompensas } = await supabase
+  .from("rewards")
+  .select("id, name, points_required")
+  .eq("business_id", cliente.business_id)
+  .eq("is_active", true)
+  .order("points_required", { ascending: true });
+
+if (errorRecompensas) {
+  throw new Error("No fue posible cargar las recompensas.");
+}
     return (
     <main
       style={{
