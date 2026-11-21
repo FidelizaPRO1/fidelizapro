@@ -94,13 +94,7 @@ if (errorHistorial) {
   </section>
 </div>
         
-<section
-  style={{
-    marginTop: 32,
-    paddingTop: 24,
-    borderTop: "1px solid #374151",
-  }}
->
+<section className={styles.historial}>
   <h2 style={{ fontSize: 22, marginBottom: 8 }}>
     Historial de puntos
   </h2>
