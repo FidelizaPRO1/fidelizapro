@@ -74,6 +74,11 @@ if (errorMembresia || !membresia || membresia.length === 0) {
   Aquí podrás sumar puntos por compras o visitas.
 </p>
 <FormularioPuntos clienteId={cliente.id} />
+<FormularioCanje
+  clienteId={cliente.id}
+  puntosDisponibles={cliente.points_balance ?? 0}
+  recompensas={recompensas ?? []}
+/>
       </div>
     </main>
   );
