@@ -59,7 +59,7 @@ export default function FormularioPuntos({
         e.preventDefault();
         void sumarPuntos();
       }}
-      style={{ display: "grid", gap: 16, marginTop: 25 }}
+      style={{ display: "grid", gap: 10, marginTop: 0 }}
     >
       <label htmlFor="cantidad-puntos">Cantidad de puntos</label>
       <input
