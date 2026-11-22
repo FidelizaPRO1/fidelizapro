@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import FormularioRecompensa from "./FormularioRecompensa";
+import GestionRecompensa from "./GestionRecompensa";
 
 export default async function RecompensasPage() {
   const supabase = await createClient();
@@ -140,20 +141,12 @@ export default async function RecompensasPage() {
                     </span>
                   </p>
 
-                  <p>
-                    <strong>Estado: </strong>
-                    <span
-                      style={{
-                        color: recompensa.is_active
-                          ? "#14B8A6"
-                          : "#9CA3AF",
-                      }}
-                    >
-                      {recompensa.is_active
-                        ? "Activa"
-                        : "Inactiva"}
-                    </span>
-                  </p>
+                                   <GestionRecompensa
+                    id={recompensa.id}
+                    nombre={recompensa.name}
+                    puntos={recompensa.points_required}
+                    activa={recompensa.is_active}
+                  />
                 </div>
               ))}
             </div>
