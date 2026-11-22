@@ -27,11 +27,18 @@ export default async function RecompensasPage() {
 
   const businessId = negocios[0].business_id;
 
-  const { data: recompensas, error: errorRecompensas } = await supabase
+   const { data: recompensas, error: errorRecompensas } = await supabase
     .from("rewards")
     .select("id, name, points_required, is_active")
     .eq("business_id", businessId)
+    .is("deleted_at", null)
     .order("points_required", { ascending: true });
+
+  const totalRecompensas = recompensas?.length ?? 0;
+  const activadas =
+    recompensas?.filter((r) => r.is_active).length ?? 0;
+  const desactivadas = totalRecompensas - activadas;
+  const disponibles = Math.max(0, 10 - totalRecompensas);
 
   return (
     <main
@@ -110,7 +117,99 @@ export default async function RecompensasPage() {
               marginBottom: 24,
             }}
           />
+    
+          {!errorRecompensas && (
+            <div
+              style={{
+                background: "#111827",
+                border: "1px solid #374151",
+                borderRadius: 12,
+                padding: 18,
+                marginBottom: 26,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <strong>Recompensas creadas</strong>
+                <strong
+                  style={{
+                    color: disponibles === 0 ? "#F5B942" : "#14B8A6",
+                    fontSize: 26,
+                  }}
+                >
+                  {totalRecompensas}/10
+                </strong>
+              </div>
 
+              <div
+                style={{
+                  display: "flex",
+                  height: 10,
+                  background: "#374151",
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  marginTop: 16,
+                }}
+              >
+                <div
+                  style={{
+                    width: `${(activadas / 10) * 100}%`,
+                    background: "#14B8A6",
+                  }}
+                />
+                <div
+                  style={{
+                    width: `${(desactivadas / 10) * 100}%`,
+                    background: "#6B7280",
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 12,
+                  marginTop: 16,
+                  fontSize: 14,
+                }}
+              >
+                <span>
+                  <span style={{ color: "#14B8A6" }}>●</span>
+                  {" "}{activadas} activadas
+                </span>
+                <span>
+                  <span style={{ color: "#9CA3AF" }}>●</span>
+                  {" "}{desactivadas} desactivadas
+                </span>
+              </div>
+
+              <div
+                style={{
+                  borderTop: "1px solid #374151",
+                  marginTop: 18,
+                  paddingTop: 16,
+                  color: disponibles === 0 ? "#F5B942" : "#14B8A6",
+                  fontSize: 14,
+                }}
+              >
+                {disponibles === 0
+                  ? "Has alcanzado el límite de 10 recompensas. Elimina una para crear otra."
+                  : `Puedes crear ${disponibles} ${
+                      disponibles === 1
+                        ? "recompensa más."
+                        : "recompensas más."
+                    }`}
+              </div>
+            </div>
+          )}
           <h2 style={{ fontSize: 22, marginTop: 0 }}>
             Mis recompensas
           </h2>
