@@ -126,7 +126,18 @@
     padding: 14px;
   }
 
-  .movimiento {
-    flex-wrap: wrap;
+    .movimiento {
+    flex-wrap: nowrap;
+  }
+
+  .movimiento > div {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .movimiento > strong {
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 }
