@@ -63,6 +63,17 @@ if (errorHistorial) {
     return (
    <main className={styles.contenedor}>
       <div className={styles.panel}>
+        <a
+          href="/clientes"
+          style={{
+            display: "inline-block",
+            color: "#14B8A6",
+            textDecoration: "none",
+            marginBottom: 20,
+          }}
+        >
+          ← Volver a clientes
+        </a>
     <h1 className={styles.titulo}>Gestión de puntos</h1>
 
   <h2 className={styles.cliente}>
