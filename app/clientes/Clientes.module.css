@@ -1,0 +1,137 @@
+.contenedor {
+  min-height: 100vh;
+  background: #111827;
+  color: #F9FAFB;
+  padding: 24px 16px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.panel {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.volver {
+  color: #14B8A6;
+  text-decoration: none;
+}
+
+.encabezado {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.marca {
+  color: #14B8A6;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.titulo {
+  font-size: 32px;
+  line-height: 1.25;
+  margin: 12px 0;
+}
+
+.descripcion {
+  color: #9CA3AF;
+  line-height: 1.6;
+}
+
+.seccion {
+  background: #1F2937;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #374151;
+}
+
+.subtitulo {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.formulario {
+  margin-top: 16px;
+  padding: 16px;
+  background: #111827;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.listado {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.listaClientes {
+  display: grid;
+  gap: 12px;
+}
+
+.tarjeta {
+  min-width: 0;
+  background: #111827;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.botonPuntos {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #14B8A6;
+  color: #111827;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .contenedor {
+    padding: 12px;
+  }
+
+  .encabezado {
+    margin-top: 20px;
+    margin-bottom: 18px;
+  }
+
+  .titulo {
+    font-size: 28px;
+  }
+
+  .marca {
+    font-size: 12px;
+  }
+
+  .seccion {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .subtitulo {
+    font-size: 20px;
+  }
+
+  .formulario {
+    padding: 14px;
+  }
+
+  .tarjeta {
+    padding: 12px;
+  }
+
+  .botonPuntos {
+    display: block;
+  }
+}
