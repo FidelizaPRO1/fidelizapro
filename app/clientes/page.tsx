@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import FormularioCliente from "./FormularioCliente";
+import styles from "./Clientes.module.css";
 export default async function ClientesPage() {
   const supabase = await createClient();
 
@@ -30,104 +31,86 @@ const { data: clientes, error: errorClientes } = await supabase
   .order("created_at", { ascending: false });
   return (
 
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#111827",
-        color: "#F9FAFB",
-        padding: "40px 20px",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div style={{ maxWidth: 760, margin: "0 auto" }}>
-        <a
-          href="/"
-          style={{ color: "#14B8A6", textDecoration: "none" }}
-        >
+       <main className={styles.contenedor}>
+      <div className={styles.panel}>
+                <a href="/" className={styles.volver}>
           ← Volver al inicio
         </a>
 
-        <div style={{ marginTop: 45, marginBottom: 35 }}>
-          <p style={{ color: "#14B8A6", fontWeight: "bold" }}>
+        <div className={styles.encabezado}>
+          <p className={styles.marca}>
             FIDELIZAPRO | PANEL DE GESTIÓN
           </p>
 
-          <h1 style={{ fontSize: 36, marginBottom: 12 }}>
+          <h1 className={styles.titulo}>
             Gestión de Clientes
           </h1>
 
-          <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+          <p className={styles.descripcion}>
             Administra los clientes de tu negocio,
             consulta sus puntos y fortalece su fidelidad.
           </p>
         </div>
 
-        <section
-          style={{
-            background: "#1F2937",
-            padding: 30,
-            borderRadius: 16,
-            border: "1px solid #374151",
-          }}
-        >
-          <h2 style={{ fontSize: 24, marginTop: 0 }}>
+             <section className={styles.seccion}>
+          <h2 className={styles.subtitulo}>
             Mis clientes
           </h2>
 
-          <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+          <p className={styles.descripcion}>
             Aquí podrás registrar nuevos clientes,
             consultar su información y administrar
             sus puntos de fidelización.
           </p>
 
-          <div
-            style={{
-              marginTop: 25,
-              padding: 20,
-              background: "#111827",
-              borderRadius: 12,
-              textAlign: "center",
-              color: "#14B8A6",
-            }}
-          >
+          <div className={styles.formulario}>
             <FormularioCliente />
-            <div style={{ marginTop: 30, textAlign: "left" }}>
-  <h3 style={{ color: "#14B8A6" }}>
-    Clientes registrados
-  </h3>
+            <div className={styles.listado}>
+              <h3 style={{ color: "#14B8A6" }}>
+                Clientes registrados
+              </h3>
 
-  {errorClientes ? (
-    <p>No fue posible cargar los clientes.</p>
-  ) : clientes && clientes.length > 0 ? (
-    <div style={{ display: "grid", gap: 12 }}>
-      {clientes.map((cliente) => (
-        <div
-          key={cliente.id}
-          style={{
-            background: "#1F2937",
-            padding: 16,
-            borderRadius: 10,
-            border: "1px solid #374151",
-          }}
-        >
-          <p><strong>Nombre:</strong> {cliente.full_name}</p>
-          <p><strong>Teléfono:</strong> {cliente.phone || "No registrado"}</p>
-          <p><strong>Correo:</strong> {cliente.email || "No registrado"}</p>
-          <p>
-            <strong>Puntos:</strong> {cliente.points_balance ?? 0}
-          </p>
-          <a href={`/clientes/${cliente.id}/puntos`} style={{ display: "inline-block", marginTop: 12, padding: "10px 16px", background: "#14B8A6", color: "#111827", borderRadius: 8, fontWeight: "bold", textDecoration: "none" }}>Sumar puntos</a>
-        </div>
-      ))}
-    </div>
-  ) : (
-    <p>Todavía no hay clientes registrados.</p>
-  )}
-</div>
+              {errorClientes ? (
+                <p>No fue posible cargar los clientes.</p>
+              ) : clientes && clientes.length > 0 ? (
+                <div className={styles.listaClientes}>
+                  {clientes.map((cliente) => (
+                    <div
+                      key={cliente.id}
+                      className={styles.tarjeta}
+                    >
+                      <p>
+                        <strong>Nombre:</strong> {cliente.full_name}
+                      </p>
+
+                      <p>
+                        <strong>Teléfono:</strong> {cliente.phone || "No registrado"}
+                      </p>
+
+                      <p>
+                        <strong>Correo:</strong> {cliente.email || "No registrado"}
+                      </p>
+
+                      <p>
+                        <strong>Puntos:</strong> {cliente.points_balance ?? 0}
+                      </p>
+
+                      <a
+                        href={`/clientes/${cliente.id}/puntos`}
+                        className={styles.botonPuntos}
+                      >
+                        Gestionar puntos
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>Todavía no hay clientes registrados.</p>
+              )}
+            </div>
           </div>
         </section>
       </div>
     </main>
   );
 }
-
