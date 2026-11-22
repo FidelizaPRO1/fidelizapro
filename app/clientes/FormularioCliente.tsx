@@ -72,11 +72,14 @@ setCorreo("");
   e.preventDefault();
   void registrarCliente();
 }}
-      style={{
+            style={{
         display: "grid",
-        gap: 16,
-        maxWidth: 500,
-        marginTop: 24,
+        gap: 12,
+        width: "100%",
+        maxWidth: 600,
+        margin: "0 auto",
+        textAlign: "left",
+        color: "#F9FAFB",
       }}
     >
       <label>
