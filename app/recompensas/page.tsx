@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import FormularioRecompensa from "./FormularioRecompensa";
 
 export default async function RecompensasPage() {
   const supabase = await createClient();
@@ -81,6 +82,34 @@ export default async function RecompensasPage() {
             border: "1px solid #374151",
           }}
         >
+                   <h2 style={{ fontSize: 22, marginTop: 0 }}>
+            Crear nueva recompensa
+          </h2>
+
+          <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+            Configura los premios que podrán obtener
+            tus clientes al acumular puntos.
+          </p>
+
+          <div
+            style={{
+              background: "#111827",
+              padding: 16,
+              borderRadius: 12,
+              marginTop: 16,
+            }}
+          >
+            <FormularioRecompensa />
+          </div>
+
+          <div
+            style={{
+              borderTop: "1px solid #374151",
+              marginTop: 30,
+              marginBottom: 24,
+            }}
+          />
+
           <h2 style={{ fontSize: 22, marginTop: 0 }}>
             Mis recompensas
           </h2>
