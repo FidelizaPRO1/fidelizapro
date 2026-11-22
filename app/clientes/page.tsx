@@ -39,7 +39,7 @@ const { data: clientes, error: errorClientes } = await supabase
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ maxWidth: 760, margin: "0 auto" }}>
         <a
           href="/"
           style={{ color: "#14B8A6", textDecoration: "none" }}
