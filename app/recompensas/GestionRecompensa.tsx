@@ -121,7 +121,39 @@ export default function GestionRecompensa({
       setGuardando(false);
     }
   }
+  async function eliminarRecompensa() {
+    if (guardando) return;
 
+    const confirmado = window.confirm(
+      `¿Estás seguro de eliminar "${nombre}"?\n\n` +
+      "La recompensa desaparecerá de la lista, " +
+      "pero se conservará el historial de los clientes."
+    );
+
+    if (!confirmado) return;
+
+    setGuardando(true);
+    setMensaje("");
+    setError(false);
+
+    try {
+      const { data, error: errorEliminacion } =
+        await supabase.rpc("eliminar_recompensa", {
+          p_reward_id: id,
+        });
+
+      if (errorEliminacion || data !== true) {
+        throw new Error();
+      }
+
+      router.refresh();
+    } catch {
+      setError(true);
+      setMensaje("No fue posible eliminar la recompensa.");
+    } finally {
+      setGuardando(false);
+    }
+  }
   return (
     <div
       style={{
