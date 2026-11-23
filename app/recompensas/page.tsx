@@ -277,11 +277,58 @@ export default async function RecompensasPage() {
               Historial de Canjes
             </h2>
 
+            
             <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
               Consulta las recompensas entregadas a tus clientes
               y los puntos utilizados en cada canje.
             </p>
+
+            {errorHistorial ? (
+              <p style={{ color: "#F87171" }}>
+                No fue posible cargar el historial de canjes.
+              </p>
+            ) : historialCanjes && historialCanjes.length > 0 ? (
+              <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
+                {historialCanjes.map((canje) => (
+                  <div
+                    key={canje.id}
+                    style={{
+                      background: "#111827",
+                      border: "1px solid #374151",
+                      borderRadius: 12,
+                      padding: 16,
+                    }}
+                  >
+                    <p style={{ marginTop: 0 }}>
+                      <strong>Puntos utilizados: </strong>
+                      <span style={{ color: "#F5B942" }}>
+                        {canje.points_spent}
+                      </span>
+                    </p>
+
+                    <p
+                      style={{
+                        color: "#9CA3AF",
+                        fontSize: 14,
+                        marginBottom: 0,
+                      }}
+                    >
+                      Fecha:{" "}
+                      {new Date(canje.created_at).toLocaleString(
+                        "es-CO",
+                        { timeZone: "America/Bogota" }
+                      )}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: "#9CA3AF", marginTop: 20 }}>
+                Todavía no hay canjes registrados.
+              </p>
+            )}
           </div>
+
         </section>
 
       </div>
