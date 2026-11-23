@@ -50,14 +50,17 @@ export default function FormularioCanje({
 
     try {
       const supabase = createClient();
+   
+const requestId = crypto.randomUUID();
 
-      const { data, error } = await supabase.rpc(
-        "canjear_recompensa",
-        {
-          p_customer_id: clienteId,
-          p_reward_id: recompensa.id,
-        }
-      );
+const { data, error } = await supabase.rpc(
+  "canjear_recompensa",
+  {
+    p_customer_id: clienteId,
+    p_reward_id: recompensa.id,
+    p_request_id: requestId,
+  }
+);
 
       if (error) {
         setEsError(true);
