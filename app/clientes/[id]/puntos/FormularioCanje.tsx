@@ -21,9 +21,14 @@ export default function FormularioCanje({
 }) {
   const router = useRouter();
   const [recompensaId, setRecompensaId] = useState("");
-  const [guardando, setGuardando] = useState(false);
-  const [mensaje, setMensaje] = useState("");
-  const [esError, setEsError] = useState(false);
+  
+const [guardando, setGuardando] = useState(false);
+const [mensaje, setMensaje] = useState("");
+const [esError, setEsError] = useState(false);
+const [solicitudPendiente, setSolicitudPendiente] = useState<{
+  recompensaId: string;
+  requestId: string;
+} | null>(null);
 
   const recompensa = recompensas.find(
     (item) => item.id === recompensaId
@@ -51,7 +56,15 @@ export default function FormularioCanje({
     try {
       const supabase = createClient();
    
-const requestId = crypto.randomUUID();
+const requestId =
+  solicitudPendiente?.recompensaId === recompensa.id
+    ? solicitudPendiente.requestId
+    : crypto.randomUUID();
+
+setSolicitudPendiente({
+  recompensaId: recompensa.id,
+  requestId,
+});
 
 const { data, error } = await supabase.rpc(
   "canjear_recompensa",
@@ -61,18 +74,33 @@ const { data, error } = await supabase.rpc(
     p_request_id: requestId,
   }
 );
-
+ 
       if (error) {
+        const errorDeConexion =
+          error.message.toLowerCase().includes("fetch") ||
+          error.message.toLowerCase().includes("network") ||
+          error.message.toLowerCase().includes("timeout");
+
+        if (!errorDeConexion) {
+          setSolicitudPendiente(null);
+        }
+
         setEsError(true);
-        setMensaje("Error: " + error.message);
+        setMensaje(
+          errorDeConexion
+            ? "No se pudo confirmar el resultado del canje. Verifica la conexión antes de reintentarlo."
+            : "Error: " + error.message
+        );
         return;
       }
-
+ 
+      setSolicitudPendiente(null);
       setMensaje(
         `Canje realizado correctamente. Nuevo saldo: ${data} puntos.`
       );
       setRecompensaId("");
       router.refresh();
+
     } catch {
       setEsError(true);
       setMensaje("No fue posible completar el canje.");
@@ -108,10 +136,14 @@ const { data, error } = await supabase.rpc(
             id="recompensa-canje"
             required
             value={recompensaId}
-            onChange={(e) => {
-              setRecompensaId(e.target.value);
-              setMensaje("");
-            }}
+            
+onChange={(e) => {
+  setRecompensaId(e.target.value);
+  setSolicitudPendiente(null);
+  setMensaje("");
+  setEsError(false);
+}}
+
             style={{
               padding: 14,
               borderRadius: 8,
