@@ -260,11 +260,31 @@ export default async function RecompensasPage() {
               ))}
             </div>
           ) : (
+    
+          ) : (
             <p style={{ color: "#9CA3AF" }}>
               Todavía no tienes recompensas registradas.
             </p>
           )}
+
+          <div
+            style={{
+              borderTop: "1px solid #374151",
+              marginTop: 32,
+              paddingTop: 24,
+            }}
+          >
+            <h2 style={{ fontSize: 22, marginTop: 0 }}>
+              Historial de Canjes
+            </h2>
+
+            <p style={{ color: "#9CA3AF", lineHeight: 1.6 }}>
+              Consulta las recompensas entregadas a tus clientes
+              y los puntos utilizados en cada canje.
+            </p>
+          </div>
         </section>
+
       </div>
     </main>
   );
