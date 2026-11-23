@@ -309,14 +309,19 @@ const { data: historialCanjes, error: errorHistorial } =
       padding: 16,
     }}
   >
+   
     <p style={{ marginTop: 0 }}>
       <strong>Cliente: </strong>
-{canje.customers?.[0]?.full_name || "Sin nombre"}
+      {Array.isArray(canje.customers)
+        ? canje.customers[0]?.full_name || "Sin nombre"
+        : (canje.customers as { full_name?: string } | null)?.full_name || "Sin nombre"}
     </p>
 
     <p>
-      <strong>Recompensa: </strong> 
-{canje.rewards?.[0]?.name || "No disponible"}
+      <strong>Recompensa: </strong>
+      {Array.isArray(canje.rewards)
+        ? canje.rewards[0]?.name || "No disponible"
+        : (canje.rewards as { name?: string } | null)?.name || "No disponible"}
     </p>
 
     <p>
