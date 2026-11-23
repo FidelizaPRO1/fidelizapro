@@ -302,12 +302,12 @@ export default async function RecompensasPage() {
   >
     <p style={{ marginTop: 0 }}>
       <strong>Cliente: </strong>
-      {canje.customers?.full_name || "Sin nombre"}
+{canje.customers?.[0]?.full_name || "Sin nombre"}
     </p>
 
     <p>
-      <strong>Recompensa: </strong>
-      {canje.rewards?.name || "No disponible"}
+      <strong>Recompensa: </strong> 
+{canje.rewards?.[0]?.name || "No disponible"}
     </p>
 
     <p>
