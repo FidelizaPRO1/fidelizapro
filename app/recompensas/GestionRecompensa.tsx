@@ -232,12 +232,26 @@ export default function GestionRecompensa({
 
       {!editando && (
         <div
-          style={{
+            style={{
             display: "flex",
             justifyContent: "flex-end",
+            flexWrap: "wrap",
+            gap: 10,
             marginTop: 8,
           }}
         >
+            <button
+            type="button"
+            disabled={guardando}
+            onClick={eliminarRecompensa}
+            style={{
+              ...estiloBoton,
+              background: "#DC2626",
+              color: "#FFFFFF",
+            }}
+          >
+            🗑 Eliminar recompensa
+          </button>
           <button
             type="button"
             disabled={guardando}
