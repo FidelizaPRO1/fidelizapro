@@ -258,9 +258,8 @@ export default async function RecompensasPage() {
                   />
                 </div>
               ))}
+              
             </div>
-          ) : (
-    
           ) : (
             <p style={{ color: "#9CA3AF" }}>
               Todavía no tienes recompensas registradas.
