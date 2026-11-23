@@ -41,13 +41,22 @@ export default async function RecompensasPage() {
   
   const disponibles = Math.max(0, 10 - totalRecompensas);
 
-  const { data: historialCanjes, error: errorHistorial } =
-    await supabase
-      .from("reward_redemptions")
-      .select("id, customer_id, reward_id, points_spent, created_at, customers(full_name), rewards(name)")
-      .eq("business_id", businessId)
-      .order("created_at", { ascending: false })
-      .limit(20);
+  
+const { data: historialCanjes, error: errorHistorial } =
+  await supabase
+    .from("reward_redemptions")
+    .select(`
+      id,
+      customer_id,
+      reward_id,
+      points_spent,
+      created_at,
+      customers!reward_redemptions_customer_id_fkey(full_name),
+      rewards!reward_redemptions_reward_id_fkey(name)
+    `)
+    .eq("business_id", businessId)
+    .order("created_at", { ascending: false })
+    .limit(20);
 
   return (
 
