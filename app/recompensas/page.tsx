@@ -38,9 +38,19 @@ export default async function RecompensasPage() {
   const activadas =
     recompensas?.filter((r) => r.is_active).length ?? 0;
   const desactivadas = totalRecompensas - activadas;
+  
   const disponibles = Math.max(0, 10 - totalRecompensas);
 
+  const { data: historialCanjes, error: errorHistorial } =
+    await supabase
+      .from("reward_redemptions")
+      .select("id, customer_id, reward_id, points_spent, created_at")
+      .eq("business_id", businessId)
+      .order("created_at", { ascending: false })
+      .limit(20);
+
   return (
+
     <main
       style={{
         minHeight: "100vh",
