@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -20,6 +20,7 @@ export default function FormularioCanje({
   recompensas: Recompensa[];
 }) {
   const router = useRouter();
+  const bloqueoCanje = useRef(false);
   const [recompensaId, setRecompensaId] = useState("");
   
 const [guardando, setGuardando] = useState(false);
@@ -30,70 +31,134 @@ const [solicitudPendiente, setSolicitudPendiente] = useState<{
   requestId: string;
 } | null>(null);
 
+const claveSolicitud = `fidelizapro-canje-pendiente-${clienteId}`;
+const [solicitudCargada, setSolicitudCargada] = useState(false);
+
+   useEffect(() => {
+    setSolicitudCargada(false);
+
+    try {
+      const guardada = localStorage.getItem(claveSolicitud);
+
+      if (guardada) {
+        const solicitud = JSON.parse(guardada);
+
+        if (
+          typeof solicitud.recompensaId !== "string" ||
+          typeof solicitud.requestId !== "string"
+        ) {
+          throw new Error("Solicitud pendiente inválida");
+        }
+
+        setSolicitudPendiente(solicitud);
+        setRecompensaId(solicitud.recompensaId);
+        setEsError(true);
+        setMensaje(
+          "Existe un canje pendiente de confirmación. Reintenta la misma solicitud para verificar su resultado."
+        );
+      } else {
+        setSolicitudPendiente(null);
+        setRecompensaId("");
+      }
+
+      setSolicitudCargada(true);
+    } catch {
+      setEsError(true);
+      setMensaje(
+        "No fue posible recuperar la solicitud pendiente. No realices otro canje hasta verificar el historial."
+      );
+    }
+  }, [claveSolicitud]);
+
   const recompensa = recompensas.find(
     (item) => item.id === recompensaId
   );
 
-  async function realizarCanje() {
-    if (guardando || !recompensa) return;
+     async function realizarCanje() {
+    if (
+      bloqueoCanje.current ||
+      guardando ||
+      !solicitudCargada
+    ) return;
 
-    if (puntosDisponibles < recompensa.points_required) {
-      setEsError(true);
-      setMensaje("El cliente no tiene puntos suficientes.");
-      return;
+    if (!solicitudPendiente) {
+      if (!recompensa) return;
+
+      if (puntosDisponibles < recompensa.points_required) {
+        setEsError(true);
+        setMensaje("El cliente no tiene puntos suficientes.");
+        return;
+      }
+
+      const confirmado = window.confirm(
+        `¿Confirmas el canje de "${recompensa.name}" por ${recompensa.points_required} puntos? Esta operación descontará puntos del cliente.`
+      );
+
+      if (!confirmado) return;
     }
 
-    const confirmado = window.confirm(
-      `¿Confirmas el canje de "${recompensa.name}" por ${recompensa.points_required} puntos? Esta operación descontará puntos del cliente.`
-    );
-
-    if (!confirmado) return;
-
+    bloqueoCanje.current = true;
     setGuardando(true);
     setMensaje("");
     setEsError(false);
 
-    try {
+        try {
       const supabase = createClient();
-   
-const requestId =
-  solicitudPendiente?.recompensaId === recompensa.id
-    ? solicitudPendiente.requestId
-    : crypto.randomUUID();
 
-setSolicitudPendiente({
-  recompensaId: recompensa.id,
+      const idRecompensa =
+        solicitudPendiente?.recompensaId ?? recompensa?.id;
+
+      if (!idRecompensa) return;
+
+      const requestId =
+        solicitudPendiente?.requestId ?? crypto.randomUUID();
+
+const nuevaSolicitud = {
+  recompensaId: idRecompensa,
   requestId,
-});
+};
+
+localStorage.setItem(
+  claveSolicitud,
+  JSON.stringify(nuevaSolicitud)
+);
+
+setSolicitudPendiente(nuevaSolicitud);
 
 const { data, error } = await supabase.rpc(
   "canjear_recompensa",
   {
     p_customer_id: clienteId,
-    p_reward_id: recompensa.id,
+    p_reward_id: idRecompensa,
     p_request_id: requestId,
   }
 );
  
-      if (error) {
-        const errorDeConexion =
-          error.message.toLowerCase().includes("fetch") ||
-          error.message.toLowerCase().includes("network") ||
-          error.message.toLowerCase().includes("timeout");
+           if (error) {
+        const erroresDefinitivos = [
+          "El cliente no tiene puntos suficientes",
+          "Recompensa no disponible",
+        ];
 
-        if (!errorDeConexion) {
+        const errorDefinitivo =
+          error.code === "P0001" &&
+          erroresDefinitivos.includes(error.message);
+
+        if (errorDefinitivo) {
+          localStorage.removeItem(claveSolicitud);
           setSolicitudPendiente(null);
         }
 
         setEsError(true);
         setMensaje(
-          errorDeConexion
-            ? "No se pudo confirmar el resultado del canje. Verifica la conexión antes de reintentarlo."
-            : "Error: " + error.message
+          errorDefinitivo
+            ? "Error: " + error.message
+            : "No se pudo confirmar el resultado del canje. Reintenta la misma solicitud. No inicies otro canje."
         );
         return;
       }
  
+            localStorage.removeItem(claveSolicitud);
       setSolicitudPendiente(null);
       setMensaje(
         `Canje realizado correctamente. Nuevo saldo: ${data} puntos.`
@@ -104,7 +169,8 @@ const { data, error } = await supabase.rpc(
     } catch {
       setEsError(true);
       setMensaje("No fue posible completar el canje.");
-    } finally {
+        } finally {
+      bloqueoCanje.current = false;
       setGuardando(false);
     }
   }
@@ -116,11 +182,12 @@ const { data, error } = await supabase.rpc(
         Selecciona una recompensa disponible para este cliente.
       </p>
 
-      {recompensas.length === 0 ? (
+      {recompensas.length === 0 && !solicitudPendiente ? (
         <p style={{ color: "#F5B942" }}>
           Este negocio todavía no tiene recompensas activas.
         </p>
       ) : (
+    
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -132,17 +199,26 @@ const { data, error } = await supabase.rpc(
             Recompensa
           </label>
 
-          <select
+                   <select
             id="recompensa-canje"
-            required
+            required={!solicitudPendiente}
+            disabled={
+              guardando ||
+              !solicitudCargada ||
+              solicitudPendiente !== null
+            }
             value={recompensaId}
-            
-onChange={(e) => {
-  setRecompensaId(e.target.value);
-  setSolicitudPendiente(null);
-  setMensaje("");
-  setEsError(false);
-}}
+            onChange={(e) => {
+              if (
+                bloqueoCanje.current ||
+                solicitudPendiente ||
+                !solicitudCargada
+              ) return;
+
+              setRecompensaId(e.target.value);
+              setMensaje("");
+              setEsError(false);
+            }}
 
             style={{
               padding: 14,
@@ -170,13 +246,15 @@ onChange={(e) => {
             </p>
           )}
 
-          <button
+                    <button
             type="submit"
             disabled={
               guardando ||
-              !recompensa ||
-              puntosDisponibles <
-                (recompensa?.points_required ?? 0)
+              !solicitudCargada ||
+              (!solicitudPendiente &&
+                (!recompensa ||
+                  puntosDisponibles <
+                    (recompensa?.points_required ?? 0)))
             }
             style={{
               padding: 14,
@@ -188,14 +266,20 @@ onChange={(e) => {
               cursor: guardando ? "wait" : "pointer",
               opacity:
                 guardando ||
-                !recompensa ||
-                puntosDisponibles <
-                  (recompensa?.points_required ?? 0)
+                !solicitudCargada ||
+                (!solicitudPendiente &&
+                  (!recompensa ||
+                    puntosDisponibles <
+                      (recompensa?.points_required ?? 0)))
                   ? 0.6
                   : 1,
             }}
           >
-            {guardando ? "Procesando..." : "Confirmar canje"}
+            {guardando
+              ? "Procesando..."
+              : solicitudPendiente
+                ? "Recuperar canje pendiente"
+                                : "Confirmar canje"}
           </button>
         </form>
       )}
